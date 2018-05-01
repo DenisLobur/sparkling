@@ -86,11 +86,11 @@ object TempData {
     * @param data
     */
   def calcAverageTempOnRainyDays0(data: Array[TempData]): Unit = {
-    val start = System.currentTimeMillis()
+    val start = System.nanoTime()
     val (rainySum, rainyCount2) = data.foldLeft(0.0 -> 0) { case ((sum, cnt), td) =>
       if (td.precip < 1.0) (sum, cnt) else (sum + td.tmax, cnt + 1)
     }
-    val end = System.currentTimeMillis()
+    val end = System.nanoTime()
     println(s"Average temp on rainy day is ${rainySum / rainyCount2} calculated for ${end - start} milliseconds")
   }
 
@@ -100,9 +100,9 @@ object TempData {
     * @param data
     */
   def calcAverageTempOnRainyDays1(data: Array[TempData]): Unit = {
-    val start = System.currentTimeMillis()
+    val start = System.nanoTime()
     val rainyTemps = data.flatMap(td => if (td.precip < 1.0) Seq.empty else Seq(td.tmax))
-    val end = System.currentTimeMillis()
+    val end = System.nanoTime()
     println(s"Average temp on rainy day is ${rainyTemps.sum / rainyTemps.length} calculated for ${end - start} milliseconds")
   }
 
@@ -112,7 +112,7 @@ object TempData {
     * @param data
     */
   def calcAverageTempOnRainyDaysPar(data: Array[TempData]): Unit = {
-    val start = System.currentTimeMillis()
+    val start = System.nanoTime()
     val (rainySum, rainyCount2) = data.par.aggregate(0.0 -> 0)(
       { case ((sum, cnt), td) =>
         if (td.precip < 1.0) (sum, cnt) else (sum + td.tmax, cnt + 1)
@@ -121,7 +121,7 @@ object TempData {
         case ((sum1, cnt1), (sum2, cnt2)) =>
           (sum1 + sum2, cnt1 + cnt2)
       })
-    val end = System.currentTimeMillis()
+    val end = System.nanoTime()
     println(s"Average temp on rainy day is ${rainySum / rainyCount2} calculated for ${end - start} milliseconds [Parallel calculation]")
   }
 
