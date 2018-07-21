@@ -6,9 +6,9 @@ import scalafx.scene.Scene
 import scalafx.scene.chart.{NumberAxis, ScatterChart, XYChart}
 
 object PlotTemps extends JFXApp {
-  val source = scala.io.Source.fromFile("MN212142_9392.csv.txt")
-  val lines = source.getLines().drop(1)
-  val data = lines.flatMap { line =>
+  private val source = scala.io.Source.fromFile("MN212142_9392.csv.txt")
+  private val lines = source.getLines().drop(1)
+  private val data = lines.flatMap { line =>
     val p = line.split(",")
     if (p(7) == "." || p(8) == "." || p(9) == ".") Seq.empty else
       Seq(TempData(p(0).toInt, p(1).toInt, p(2).toInt, p(4).toInt,
@@ -19,11 +19,11 @@ object PlotTemps extends JFXApp {
 
   stage = new JFXApp.PrimaryStage {
     title = "Temp Plot"
-    scene = new Scene(500, 500) {
-      val xAxis = NumberAxis()
-      val yAxis = NumberAxis()
-      val pData = XYChart.Series[Number, Number]("Temps",
-        ObservableBuffer(data.map(td => XYChart.Data[Number, Number](td.doy, td.precip)): _*))
+    scene = new Scene(1000, 1000) {
+      private val xAxis = NumberAxis()
+      private val yAxis = NumberAxis()
+      private val pData = XYChart.Series[Number, Number]("Temps",
+        ObservableBuffer(data.map(td => XYChart.Data[Number, Number](td.doy, td.tmin)): _*))
       val plot = new ScatterChart(xAxis, yAxis, ObservableBuffer(pData))
       root = plot
     }
